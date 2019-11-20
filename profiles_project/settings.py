@@ -125,3 +125,8 @@ STATIC_URL = '/static/'
 
 #override the default model for user registration and autentication
 AUTH_USER_MODEL = 'profiles_api.UserProfile'
+
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.RemoteUserBackend',
+        'django.contrib.auth.backends.ModelBackend',
+)
