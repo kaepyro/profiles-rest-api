@@ -6,6 +6,8 @@ from rest_framework import status
 from profiles_api import serializers
 # basic class fro viewsets
 from rest_framework import viewsets
+# for filtering i.e. search user by name
+from rest_framework import filters
 
 from rest_framework.authentication import TokenAuthentication
 from profiles_api import permissions
@@ -142,3 +144,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     # token to every request a user made
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile, )
+    # add filtering options
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',)
