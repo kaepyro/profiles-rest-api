@@ -13,6 +13,7 @@ router.register('profile', views.UserProfileViewSet)
 urlpatterns = [
     #.as_view --> it will render the url to the function call in the view
     path('hello-view/', views.HelloApiView.as_view()),
+    path('login/', views.UserLoginApiView.as_view()),
     #this is for the viewset
     path('',include(router.urls))
 ]
