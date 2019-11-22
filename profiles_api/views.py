@@ -8,6 +8,10 @@ from profiles_api import serializers
 from rest_framework import viewsets
 # for filtering i.e. search user by name
 from rest_framework import filters
+#from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
+
+
 # for login
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
@@ -157,3 +161,23 @@ class UserLoginApiView(ObtainAuthToken):
     """Handle creating user authentication tokens"""
     # we have to override this class to see in the browsable api
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handles creating, reding and updating profile feed items"""
+
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.ProfileFeedItemSerializer
+    queryset = models.ProfileFeedItem.objects.all()
+    permission_classes = (
+        permissions.UpdateOwnStatus,
+        #IsAuthenticatedOrReadOnly
+        IsAuthenticated
+    )
+
+    # the perform_create function enables to override the behavior of objects
+    # created through model ViewSet
+    # We want the user_profile read only
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in user"""
+        # with this user_profile will be passed additionally to the serializer
+        serializer.save(user_profile=self.request.user)

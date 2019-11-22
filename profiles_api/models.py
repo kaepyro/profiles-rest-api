@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import  PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+# we importing the settings from the django project
+from django.conf import settings
 
 
 # creating a custom manager, which can handle users with email and not
@@ -66,3 +68,23 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """Return string representation of our user"""
         return self.email
+
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
+    #linking different models --> foreign key
+    user_profile = models.ForeignKey(
+        #best practice is to import the model from the settings, because
+        # if it would be changed in the future, foreign keys would have to be
+        # changed manually
+        settings.AUTH_USER_MODEL,
+        # specify here what should be done with the feed items, if the relational
+        # item is deleted (user is deleted). Cascade: cascade the change
+        on_delete=models.CASCADE
+    )
+    # contains the text of the feed update
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return the model as a string"""
+        return self.status_text
