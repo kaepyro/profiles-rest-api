@@ -7,6 +7,11 @@ from profiles_api import serializers
 # basic class fro viewsets
 from rest_framework import viewsets
 
+from rest_framework.authentication import TokenAuthentication
+from profiles_api import permissions
+
+from profiles_api import models
+
 
 # it works by defining an url as an endpoint and assigning to the View
 # it expects a different functions for each http requests
@@ -125,4 +130,15 @@ class HelloViewSet(viewsets.ViewSet):
         """Handle removing an object"""
         return Response({'http_method':'DELETE'})
 
-    
+#django knows the standard functions on a ModelViewSet(create, list, update,
+#partial_update, destroy)
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handle creating and updating profiles"""
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+
+    # adding all of the authentication classes to the class variable
+    # it generates a random token when the user logges in and we add this
+    # token to every request a user made
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile, )

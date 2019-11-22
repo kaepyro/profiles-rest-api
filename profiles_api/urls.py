@@ -6,6 +6,9 @@ from profiles_api import views
 # create the router and register the new viewset. It figures out the urls needed
 router = DefaultRouter()
 router.register('hello-viewset', views.HelloViewSet, base_name = 'hello-viewset')
+# here we don not need to add the base_name, because we have a quary set
+# in the viewset
+router.register('profile', views.UserProfileViewSet)
 
 urlpatterns = [
     #.as_view --> it will render the url to the function call in the view
